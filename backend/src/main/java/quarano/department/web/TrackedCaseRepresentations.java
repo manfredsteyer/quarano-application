@@ -33,6 +33,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -55,6 +56,9 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import de.quarano.sormas.client.model.CaseDataDto;
+import de.quarano.sormas.client.model.PersonReferenceDto;
 
 /**
  * @author Oliver Drotbohm
@@ -91,6 +95,18 @@ class TrackedCaseRepresentations implements ExternalTrackedCaseRepresentations {
 	}
 
 	public TrackedCaseSummary toSummary(TrackedCase trackedCase) {
+		return new TrackedCaseSummary(trackedCase, messages);
+	}
+	
+	public TrackedCaseSummary toSummary(CaseDataDto caseData) {
+		var person = caseData.getPerson();
+		var district = caseData.getDistrict();
+		OffsetDateTime creationDate = caseData.getCreationDate();
+		
+		var trackedPerson = new TrackedPerson(person.getFirstName(), person.getLastName());
+		var department = new Department(district.getCaption());
+		var trackedCase = new TrackedCase(trackedPerson, CaseType.INDEX, department);
+		
 		return new TrackedCaseSummary(trackedCase, messages);
 	}
 

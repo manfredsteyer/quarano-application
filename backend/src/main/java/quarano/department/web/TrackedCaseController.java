@@ -26,12 +26,15 @@ import quarano.tracking.web.TrackedPersonDto;
 import quarano.tracking.web.TrackingController;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.RepresentationModel;
@@ -53,6 +56,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.quarano.sormas.client.api.CaseControllerApi;
+import de.quarano.sormas.client.model.CaseDataDto;
+
 /**
  * @author Oliver Drotbohm
  */
@@ -67,6 +73,7 @@ class TrackedCaseController {
 	private final @NonNull TrackedCaseProperties configuration;
 	private final @NonNull TrackedCaseRepresentations representations;
 	private final @NonNull SmartValidator validator;
+	private final @NonNull CaseControllerApi sormasCaseController;
 
 	private final EmbeddedWrappers wrappers = new EmbeddedWrappers(false);
 
@@ -77,9 +84,16 @@ class TrackedCaseController {
 				.map(representations::toSummary) //
 				.toList();
 
-		Object collection = summaries.isEmpty() //
+		var sormasCaseDtos = sormasCaseController.getAllCases(0L);
+		var sormasCases = sormasCaseDtos.stream().map(representations::toSummary)//
+				.collect(Collectors.toList());
+
+		var allList = new ArrayList<TrackedCaseSummary>(summaries);
+		allList.addAll(sormasCases);
+		
+		Object collection = allList.isEmpty() //
 				? List.of(wrappers.emptyCollectionOf(TrackedCaseSummary.class)) //
-				: summaries;
+				: allList;
 
 		return RepresentationModel.of(collection);
 	}
