@@ -109,13 +109,50 @@ That call will return a 200 OK and contain the CSV data as body.
 include::{snippets}/csv-import-export/quarantine-order/response-body.adoc[]
 
 == Frontend texts
+=== GET
 
 Even without authentication, it is possible to retrieve installation-specific texts from the Quarano REST API via `/api/frontendtexts`.
 
-include::{snippets}/frontend-texts/get-frontend-texts/curl-request.adoc[]
-include::{snippets}/frontend-texts/get-frontend-texts/response-body.adoc[]
+include::{snippets}/frontend-texts/get-texts/curl-request.adoc[]
+include::{snippets}/frontend-texts/get-texts/response-body.adoc[]
 
 The request takes the following attributes. Without parameters all frontend texts are returned.:
 
-include::{snippets}/frontend-texts/get-frontend-texts/auto-request-parameters.adoc[]
+include::{snippets}/frontend-texts/get-texts/auto-request-parameters.adoc[]
 
+=== PUT
+
+With admin authentication, it is possible to reset installation-specific texts with the Quarano REST API via `/api/admin/frontendtexts`.
+
+include::{snippets}/frontend-texts/put-texts/curl-request.adoc[]
+
+The request requires the following path parameters.:
+
+include::{snippets}/frontend-texts/put-texts/auto-path-parameters.adoc[]
+
+In addition, the language of the text must be transmitted via the Content-Language header!
+
+== Email texts
+=== GET
+
+Even without authentication, it is possible to retrieve installation-specific email texts from the Quarano REST API via `/api/emailtexts`.
+The delivered texts are raw texts where the placeholders are not replaced.
+
+include::{snippets}/email-texts/get-texts/curl-request.adoc[]
+include::{snippets}/email-texts/get-texts/response-body.adoc[]
+
+The request takes the following attributes. Without parameters all frontend texts are returned.:
+
+include::{snippets}/email-texts/get-texts/auto-request-parameters.adoc[]
+
+=== PUT
+
+With admin authentication, it is possible to reset installation-specific email texts with the Quarano REST API via `/api/admin/emailtexts`.
+
+include::{snippets}/email-texts/put-texts/curl-request.adoc[]
+
+The request requires the following path parameters.:
+
+include::{snippets}/email-texts/put-texts/auto-path-parameters.adoc[]
+
+In addition, the language of the text must be transmitted via the Content-Language header!
